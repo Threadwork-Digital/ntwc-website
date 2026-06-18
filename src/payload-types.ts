@@ -70,6 +70,7 @@ export interface Config {
     pages: Page;
     posts: Post;
     events: Event;
+    causes: Cause;
     media: Media;
     categories: Category;
     users: User;
@@ -93,6 +94,7 @@ export interface Config {
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
+    causes: CausesSelect<false> | CausesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -846,6 +848,58 @@ export interface Event {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "causes".
+ */
+export interface Cause {
+  id: number;
+  title: string;
+  /**
+   * Select from the square image library (800×800px) for the donate index card.
+   */
+  heroImage?: (number | null) | Media;
+  description: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  category: 'possums' | 'bats' | 'macropods' | 'birds' | 'reptiles' | 'monotremes' | 'general';
+  /**
+   * Free text to allow for flexible display, e.g. "$25 per box", "$150 per bat, or $100 / $50 / any amount", "Any amount".
+   */
+  donationAmount: string;
+  /**
+   * This cause’s dedicated PayPal campaign link.
+   */
+  paypalUrl: string;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+  };
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1045,6 +1099,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'events';
         value: number | Event;
+      } | null)
+    | ({
+        relationTo: 'causes';
+        value: number | Cause;
       } | null)
     | ({
         relationTo: 'media';
@@ -1302,6 +1360,30 @@ export interface EventsSelect<T extends boolean = true> {
   registrationUrl?: T;
   cateringProvided?: T;
   dietaryContactEmail?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "causes_select".
+ */
+export interface CausesSelect<T extends boolean = true> {
+  title?: T;
+  heroImage?: T;
+  description?: T;
+  category?: T;
+  donationAmount?: T;
+  paypalUrl?: T;
   meta?:
     | T
     | {
@@ -1862,6 +1944,10 @@ export interface TaskSchedulePublish {
       | ({
           relationTo: 'events';
           value: number | Event;
+        } | null)
+      | ({
+          relationTo: 'causes';
+          value: number | Cause;
         } | null);
     global?: string | null;
     user?: (number | null) | User;
