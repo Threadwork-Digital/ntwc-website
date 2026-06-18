@@ -71,6 +71,7 @@ export interface Config {
     posts: Post;
     events: Event;
     causes: Cause;
+    resources: Resource;
     media: Media;
     categories: Category;
     users: User;
@@ -95,6 +96,7 @@ export interface Config {
     posts: PostsSelect<false> | PostsSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
     causes: CausesSelect<false> | CausesSelect<true>;
+    resources: ResourcesSelect<false> | ResourcesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -900,6 +902,41 @@ export interface Cause {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "resources".
+ */
+export interface Resource {
+  id: number;
+  title: string;
+  description?: string | null;
+  resourceType: 'document' | 'webinar' | 'video' | 'audio';
+  /**
+   * Upload the PDF file for this document.
+   */
+  file?: (number | null) | Media;
+  /**
+   * Link to the webinar, video, or audio file (e.g. YouTube, Vimeo, podcast host).
+   */
+  externalUrl?: string | null;
+  category: 'governance' | 'training' | 'code-of-practice' | 'general';
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+  };
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1103,6 +1140,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'causes';
         value: number | Cause;
+      } | null)
+    | ({
+        relationTo: 'resources';
+        value: number | Resource;
       } | null)
     | ({
         relationTo: 'media';
@@ -1384,6 +1425,30 @@ export interface CausesSelect<T extends boolean = true> {
   category?: T;
   donationAmount?: T;
   paypalUrl?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "resources_select".
+ */
+export interface ResourcesSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  resourceType?: T;
+  file?: T;
+  externalUrl?: T;
+  category?: T;
   meta?:
     | T
     | {
@@ -1948,6 +2013,10 @@ export interface TaskSchedulePublish {
       | ({
           relationTo: 'causes';
           value: number | Cause;
+        } | null)
+      | ({
+          relationTo: 'resources';
+          value: number | Resource;
         } | null);
     global?: string | null;
     user?: (number | null) | User;
