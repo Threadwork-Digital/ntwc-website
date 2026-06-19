@@ -1,4 +1,6 @@
 import type { CollectionConfig } from 'payload'
+import { adminOnly } from '../../access/adminOnly'
+import { editorOrAdmin } from '../../access/editorOrAdmin'
 
 import {
   FixedToolbarFeature,
@@ -23,10 +25,10 @@ import { slugField } from 'payload'
 export const Causes: CollectionConfig<'causes'> = {
   slug: 'causes',
   access: {
-    create: authenticated,
-    delete: authenticated,
+    create: editorOrAdmin,
+    delete: adminOnly,
     read: authenticatedOrPublished,
-    update: authenticated,
+    update: editorOrAdmin,
   },
   defaultPopulate: {
     title: true,

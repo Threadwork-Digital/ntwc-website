@@ -1,4 +1,6 @@
 import type { CollectionConfig } from 'payload'
+import { adminOnly } from '../../access/adminOnly'
+import { editorOrAdmin } from '../../access/editorOrAdmin'
 
 import {
   BlocksFeature,
@@ -30,10 +32,10 @@ import { slugField } from 'payload'
 export const Posts: CollectionConfig<'posts'> = {
   slug: 'posts',
   access: {
-    create: authenticated,
-    delete: authenticated,
+    create: editorOrAdmin,
+    delete: adminOnly,
     read: authenticatedOrPublished,
-    update: authenticated,
+    update: editorOrAdmin,
   },
   // This config controls what's populated by default when a post is referenced
   // https://payloadcms.com/docs/queries/select#defaultpopulate-collection-config-property

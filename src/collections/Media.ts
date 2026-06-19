@@ -1,4 +1,7 @@
 import type { CollectionConfig } from 'payload'
+import { adminOnly } from '../access/adminOnly'
+import { editorOrAdmin } from '../access/editorOrAdmin'
+import { anyone } from '../access/anyone'
 
 import {
   FixedToolbarFeature,
@@ -7,8 +10,6 @@ import {
 } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { fileURLToPath } from 'url'
-
-import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
 
 const filename = fileURLToPath(import.meta.url)
@@ -18,10 +19,10 @@ export const Media: CollectionConfig = {
   slug: 'media',
   folders: true,
   access: {
-    create: authenticated,
-    delete: authenticated,
+    create: editorOrAdmin,
+    delete: adminOnly,
     read: anyone,
-    update: authenticated,
+    update: editorOrAdmin,
   },
   fields: [
     {

@@ -1,4 +1,6 @@
 import type { CollectionConfig } from 'payload'
+import { adminOnly } from '../../access/adminOnly'
+import { editorOrAdmin } from '../../access/editorOrAdmin'
 
 import { authenticated } from '../../access/authenticated'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
@@ -17,10 +19,10 @@ import { slugField } from 'payload'
 export const Resources: CollectionConfig<'resources'> = {
   slug: 'resources',
   access: {
-    create: authenticated,
-    delete: authenticated,
+    create: editorOrAdmin,
+    delete: adminOnly,
     read: authenticatedOrPublished,
-    update: authenticated,
+    update: editorOrAdmin,
   },
   defaultPopulate: {
     title: true,

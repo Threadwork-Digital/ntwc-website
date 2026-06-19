@@ -1,4 +1,6 @@
 import type { CollectionConfig } from 'payload'
+import { adminOnly } from '../../access/adminOnly'
+import { editorOrAdmin } from '../../access/editorOrAdmin'
 
 import {
   FixedToolbarFeature,
