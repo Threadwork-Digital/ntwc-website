@@ -72,6 +72,7 @@ export interface Config {
     events: Event;
     causes: Cause;
     resources: Resource;
+    'image-pairs': ImagePair;
     media: Media;
     categories: Category;
     users: User;
@@ -97,6 +98,7 @@ export interface Config {
     events: EventsSelect<false> | EventsSelect<true>;
     causes: CausesSelect<false> | CausesSelect<true>;
     resources: ResourcesSelect<false> | ResourcesSelect<true>;
+    'image-pairs': ImagePairsSelect<false> | ImagePairsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -233,7 +235,10 @@ export interface Page {
 export interface Post {
   id: number;
   title: string;
-  heroImage?: (number | null) | Media;
+  /**
+   * Select the image pair to use for this story’s hero and card thumbnail.
+   */
+  imagePair?: (number | null) | ImagePair;
   content: {
     root: {
       type: string;
@@ -275,6 +280,31 @@ export interface Post {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "image-pairs".
+ */
+export interface ImagePair {
+  id: number;
+  /**
+   * Human-readable description shown when selecting an image pair elsewhere, e.g. "Possum in nest box".
+   */
+  title: string;
+  /**
+   * The shared filename base, without the hdr_/sqr_ prefix or file extension. E.g. for hdr_possum01.png and sqr_possum01.png, enter "possum01".
+   */
+  baseName: string;
+  /**
+   * Automatically matched to hdr_{baseName}.png on save. Read-only.
+   */
+  heroImage?: (number | null) | Media;
+  /**
+   * Automatically matched to sqr_{baseName}.png on save. Read-only.
+   */
+  squareImage?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -797,9 +827,9 @@ export interface Event {
   id: number;
   title: string;
   /**
-   * Select from the hero image library (1440×480px).
+   * Select the image pair to use for this event’s hero and card thumbnail.
    */
-  heroImage?: (number | null) | Media;
+  imagePair?: (number | null) | ImagePair;
   description: {
     root: {
       type: string;
@@ -857,9 +887,9 @@ export interface Cause {
   id: number;
   title: string;
   /**
-   * Select from the square image library (800×800px) for the donate index card.
+   * Select the image pair to use for this cause’s hero and card thumbnail.
    */
-  heroImage?: (number | null) | Media;
+  imagePair?: (number | null) | ImagePair;
   description: {
     root: {
       type: string;
@@ -908,6 +938,10 @@ export interface Cause {
 export interface Resource {
   id: number;
   title: string;
+  /**
+   * Select the image pair to use for this resource’s hero and card thumbnail.
+   */
+  imagePair?: (number | null) | ImagePair;
   description?: string | null;
   resourceType: 'document' | 'webinar' | 'video' | 'audio';
   /**
@@ -1147,6 +1181,10 @@ export interface PayloadLockedDocument {
         value: number | Resource;
       } | null)
     | ({
+        relationTo: 'image-pairs';
+        value: number | ImagePair;
+      } | null)
+    | ({
         relationTo: 'media';
         value: number | Media;
       } | null)
@@ -1361,7 +1399,7 @@ export interface FormBlockSelect<T extends boolean = true> {
  */
 export interface PostsSelect<T extends boolean = true> {
   title?: T;
-  heroImage?: T;
+  imagePair?: T;
   content?: T;
   relatedPosts?: T;
   categories?: T;
@@ -1392,7 +1430,7 @@ export interface PostsSelect<T extends boolean = true> {
  */
 export interface EventsSelect<T extends boolean = true> {
   title?: T;
-  heroImage?: T;
+  imagePair?: T;
   description?: T;
   eventType?: T;
   eventStatus?: T;
@@ -1421,7 +1459,7 @@ export interface EventsSelect<T extends boolean = true> {
  */
 export interface CausesSelect<T extends boolean = true> {
   title?: T;
-  heroImage?: T;
+  imagePair?: T;
   description?: T;
   category?: T;
   donationAmount?: T;
@@ -1445,6 +1483,7 @@ export interface CausesSelect<T extends boolean = true> {
  */
 export interface ResourcesSelect<T extends boolean = true> {
   title?: T;
+  imagePair?: T;
   description?: T;
   resourceType?: T;
   file?: T;
@@ -1462,6 +1501,18 @@ export interface ResourcesSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "image-pairs_select".
+ */
+export interface ImagePairsSelect<T extends boolean = true> {
+  title?: T;
+  baseName?: T;
+  heroImage?: T;
+  squareImage?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -44,6 +44,7 @@ export const Posts: CollectionConfig<'posts'> = {
     title: true,
     slug: true,
     categories: true,
+    imagePair: true,
     meta: {
       image: true,
       description: true,
@@ -79,9 +80,12 @@ export const Posts: CollectionConfig<'posts'> = {
         {
           fields: [
             {
-              name: 'heroImage',
-              type: 'upload',
-              relationTo: 'media',
+              name: 'imagePair',
+              type: 'relationship',
+              admin: {
+                description: 'Select the image pair to use for this story\u2019s hero and card thumbnail.',
+              },
+              relationTo: 'image-pairs',
             },
             {
               name: 'content',

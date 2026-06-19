@@ -25,10 +25,10 @@ import { slugField } from 'payload'
 export const Events: CollectionConfig<'events'> = {
   slug: 'events',
   access: {
-    create: authenticated,
-    delete: authenticated,
+    create: editorOrAdmin,
+    delete: adminOnly,
     read: authenticatedOrPublished,
-    update: authenticated,
+    update: editorOrAdmin,
   },
   defaultPopulate: {
     title: true,
@@ -36,6 +36,7 @@ export const Events: CollectionConfig<'events'> = {
     eventType: true,
     date: true,
     location: true,
+    imagePair: true,
     meta: {
       image: true,
       description: true,
@@ -71,12 +72,12 @@ export const Events: CollectionConfig<'events'> = {
         {
           fields: [
             {
-              name: 'heroImage',
-              type: 'upload',
-              relationTo: 'media',
+              name: 'imagePair',
+              type: 'relationship',
               admin: {
-                description: 'Select from the hero image library (1440×480px).',
+                description: 'Select the image pair to use for this event\u2019s hero and card thumbnail.',
               },
+              relationTo: 'image-pairs',
             },
             {
               name: 'description',

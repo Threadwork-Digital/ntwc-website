@@ -36,7 +36,7 @@ export const Causes: CollectionConfig<'causes'> = {
     category: true,
     donationAmount: true,
     paypalUrl: true,
-    heroImage: true,
+    imagePair: true,
     meta: {
       image: true,
       description: true,
@@ -72,12 +72,12 @@ export const Causes: CollectionConfig<'causes'> = {
         {
           fields: [
             {
-              name: 'heroImage',
-              type: 'upload',
-              relationTo: 'media',
+              name: 'imagePair',
+              type: 'relationship',
               admin: {
-                description: 'Select from the square image library (800×800px) for the donate index card.',
+                description: 'Select the image pair to use for this cause\u2019s hero and card thumbnail.',
               },
+              relationTo: 'image-pairs',
             },
             {
               name: 'description',

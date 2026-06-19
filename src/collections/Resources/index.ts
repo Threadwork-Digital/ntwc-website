@@ -30,7 +30,8 @@ export const Resources: CollectionConfig<'resources'> = {
     resourceType: true,
     category: true,
     file: true,
-    externalUrl: true,
+    externalUrl: true,    
+    imagePair: true,
     meta: {
       image: true,
       description: true,
@@ -65,6 +66,14 @@ export const Resources: CollectionConfig<'resources'> = {
       tabs: [
         {
           fields: [
+            {
+              name: 'imagePair',
+              type: 'relationship',
+              admin: {
+                description: 'Select the image pair to use for this resource\u2019s hero and card thumbnail.',
+              },
+              relationTo: 'image-pairs',
+            },
             {
               name: 'description',
               type: 'textarea',
